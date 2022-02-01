@@ -49,7 +49,7 @@ export default function App() {
 
       // Select which option you want: Top Tracks or Album Tracks
       // (Comment out the one you are not using:)
-      // myTopTracks(setTracks, token);
+      // myTopTracsks(setTracks, token);
       albumTracks(ALBUM_ID, setTracks, token);
     }
   }, [token]);
@@ -59,12 +59,10 @@ export default function App() {
 
   const renderSong = ({ item, index }) => {
     // console.log(item);
-    console.log(item.album.images[0].url);
-    // console.log(item.album.images);
     return (
       <Song
-        idx={index} 
-        image={item.album.images[0].url} 
+        idx={index + 1} 
+        imageUrl={item.album.images[0].url} 
         title={item.name} 
         artist={item.artists[0].name} // how to set artists if more than 1?
         album={item.album.name}

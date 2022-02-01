@@ -18,8 +18,12 @@ export default function Song({ idx, imageUrl, title, artist, album, duration }) 
             <Text style={styles.idx}>{idx}</Text>
             <Image style={styles.song_image} source={{uri: imageUrl}}/>
             <View style={styles.song_title_and_artist}>
-                <Text numberOfLines={1} style={styles.song_title}>{title}</Text>
-                <Text numberOfLines={1} style={styles.song_artist}>{artist}</Text>
+                <View style={{justifyContent: 'flex-end'}}>
+                    <Text numberOfLines={1} style={styles.song_title}>{title}</Text>
+                </View>
+                <View>
+                    <Text numberOfLines={1} style={styles.song_artist}>{artist}</Text>
+                </View>
             </View>
             <Text numberOfLines={1} style={styles.album}>{album}</Text>
             <Text style={styles.duration}>{millisToMinutesAndSeconds(duration)}</Text>
@@ -54,15 +58,12 @@ const styles = StyleSheet.create({
     song_title_and_artist: {
         flex: 7,
         padding: 3,
+        justifyContent: 'center',
     },
     song_title: {
         fontSize: 16,
         color: 'white',
         flex: 1,
-        // textAlignVertical: 'center',
-        // position: 'absolute',
-        // bottom: 0,
-        backgroundColor: 'purple', //testing purposes
     },
     song_artist: {
         fontSize: 14,
