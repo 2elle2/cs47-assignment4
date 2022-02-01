@@ -3,14 +3,11 @@ Name: Michelle Leung
 CS 47 Assignment 3 (Spotify)
 */
 
-import { StyleSheet, SafeAreaView, FlatList, Text, Image, Pressable } from "react-native";
+import { StyleSheet, SafeAreaView, View, FlatList, Text, Image, Pressable } from "react-native";
 import { useState, useEffect } from "react";
 import { ResponseType, useAuthRequest } from "expo-auth-session";
 import { myTopTracks, albumTracks } from "./utils/apiOptions";
 import { REDIRECT_URI, SCOPES, CLIENT_ID, ALBUM_ID } from "./utils/constants";
-
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 
 import Colors from './Themes/colors';
 import Images from './Themes/images'
@@ -22,8 +19,6 @@ const discovery = {
   authorizationEndpoint: "https://accounts.spotify.com/authorize",
   tokenEndpoint: "https://accounts.spotify.com/api/token"
 };
-
-const Stack = createStackNavigator();
 
 export default function App() {
   const [token, setToken] = useState("");
@@ -59,72 +54,70 @@ export default function App() {
     }
   }, [token]);
 
+
+
+
+  const renderSong = ({ item, index }) => {
+    // console.log(item);
+    console.log(item.album.images[0].url);
+    // console.log(item.album.images);
+    return (
+      <Song
+        idx={index} 
+        image={item.album.images[0].url} 
+        title={item.name} 
+        artist={item.artists[0].name} // how to set artists if more than 1?
+        album={item.album.name}
+        duration={item.duration_ms}
+      />
+    );
+  }
+
+  function SongList() {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.topBar}>
+          <Image 
+            source={Images.spotify} 
+            style={styles.logoTracks} />
+          <Text style={styles.tracksText}> Album Tracks</Text>
+        </View>
+        <View style={styles.listArea}>
+          <FlatList
+            data={tracks}
+            renderItem={renderSong} 
+          />
+        </View>
+      </SafeAreaView>
+    )
+  }
+
+
   function SpotifyAuthButton() {
     return (
       <SafeAreaView style={styles.container}>
         <Pressable style={styles.button} onPress={() => {promptAsync()}}>
             <Image 
               source={Images.spotify}
-              style={styles.logo}/>
+              style={styles.logoConnect}/>
             <Text style={styles.buttonText}> CONNECT WITH SPOTIFY</Text>
         </Pressable>
       </SafeAreaView>
     )
   }
 
-
-  const renderSong = ({ song }) => (
-    <Song
-      idx={song.track.track_number} 
-      image={song.images[0]} 
-      title={song.name} 
-      artist={song.artists.name}
-      album={song.album.name}
-      duration={song.duration_ms}
-    />
-  )
-
   let contentDisplayed = null;
 
   if (token) {
-    // contentDisplayed = <Text style={styles.buttonText}>TODO: Put FlatList here!</Text>
-    contentDisplayed = <FlatList
-                          data={tracks}
-                          renderItem={renderSong} 
-                        /> // Our FlatList of songs
+    contentDisplayed = <SongList/> // Our FlatList of songs
   } else {
     contentDisplayed = <SpotifyAuthButton/> // Our "Connect with Spotify" button
   }
 
   return (
-    // <NavigationContainer>
-    //   <Stack.Navigator
-    //     screenOptions= {{
-    //       // Custom Header Styles
-    //       headerStyle: {
-    //         backgroundColor: Colors.background
-    //       },
-    //       headerTitleStyle: {
-    //         color: 'white',
-    //         fontWeight: 'bold',
-    //       },
-    //     }}
-    //   >
-    //     {/* <Stack.Screen
-    //       name="SpotifyAuthButton"
-    //       component={SpotifyAuthButton}
-    //       options={{
-    //         headerShown: false,
-    //       }}
-    //     /> */}
-
-    //   </Stack.Navigator>
-    // </NavigationContainer>
-
     <SafeAreaView style={styles.container}>
       {contentDisplayed}
     </SafeAreaView>
-
   );
 }
 
@@ -134,7 +127,27 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
     justifyContent: "center",
     alignItems: "center",
-    flexDirection: 'row'
+    flexDirection: 'column',
+  },
+
+  topBar: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  listArea: {
+    flex: 18,
+    flexDirection: 'row',
+  },
+  logoTracks: {
+    height: 20,
+    width: 20,
+  },
+  tracksText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
   },
 
   button: {
@@ -150,8 +163,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
   },
-  logo: {
+  logoConnect: {
     height: 16,
     width: 16,
-  }
+  },
 });
