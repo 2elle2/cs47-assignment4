@@ -10,7 +10,6 @@ import Colors from './Themes/colors';
 import millisToMinutesAndSeconds from './utils/millisToMinuteSeconds';
 
 const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 
 
 export default function Song({ idx, imageUrl, title, artists, album, duration }) {
@@ -27,8 +26,8 @@ export default function Song({ idx, imageUrl, title, artists, album, duration })
                     {
                         artists.map((obj,idx) => {
                             return (idx !== artists.length - 1) ? 
-                                <Text>{obj.name}, </Text> : 
-                                <Text>{obj.name}</Text>
+                                <Text key={idx}>{obj.name}, </Text> : 
+                                <Text key={idx}>{obj.name}</Text>
                         })
                     }
                     </Text>

@@ -49,11 +49,10 @@ export default function App() {
 
       // Select which option you want: Top Tracks or Album Tracks
       // (Comment out the one you are not using:)
-      // myTopTracsks(setTracks, token);
+      // myTopTracks(setTracks, token);
       albumTracks(ALBUM_ID, setTracks, token);
     }
   }, [token]);
-
 
 
   const renderSong = ({ item, index }) => {
@@ -82,7 +81,9 @@ export default function App() {
           <FlatList
             data={tracks} // the array of songs to display
             renderItem={renderSong} // function that renders each song
-            keyExtractor={(item) => item.idx} // unique key for each item
+            keyExtractor={(item, index) => {
+              return index.toString();
+            }} // unique key for each item
           />
         </View>
       </SafeAreaView>
