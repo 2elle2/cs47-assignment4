@@ -56,15 +56,13 @@ export default function App() {
 
 
 
-
   const renderSong = ({ item, index }) => {
-    // console.log(item);
     return (
       <Song
         idx={index + 1} 
         imageUrl={item.album.images[0].url} 
         title={item.name} 
-        artist={item.artists[0].name} // how to set artists if more than 1?
+        artists={item.artists} 
         album={item.album.name}
         duration={item.duration_ms}
       />
@@ -82,8 +80,9 @@ export default function App() {
         </View>
         <View style={styles.listArea}>
           <FlatList
-            data={tracks}
-            renderItem={renderSong} 
+            data={tracks} // the array of songs to display
+            renderItem={renderSong} // function that renders each song
+            keyExtractor={(item) => item.idx} // unique key for each item
           />
         </View>
       </SafeAreaView>

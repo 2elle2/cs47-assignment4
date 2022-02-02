@@ -12,7 +12,8 @@ import millisToMinutesAndSeconds from './utils/millisToMinuteSeconds';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-export default function Song({ idx, imageUrl, title, artist, album, duration }) {
+
+export default function Song({ idx, imageUrl, title, artists, album, duration }) {
     return (
         <View style={styles.song}>
             <Text style={styles.idx}>{idx}</Text>
@@ -22,7 +23,16 @@ export default function Song({ idx, imageUrl, title, artist, album, duration }) 
                     <Text numberOfLines={1} style={styles.song_title}>{title}</Text>
                 </View>
                 <View>
-                    <Text numberOfLines={1} style={styles.song_artist}>{artist}</Text>
+                    <Text numberOfLines={1} style={styles.song_artist}>
+                    {
+                        artists.map((obj,idx) => {
+                            return (idx !== artists.length - 1) ? 
+                                <Text>{obj.name}, </Text> : 
+                                <Text>{obj.name}</Text>
+                        })
+                    }
+                    </Text>
+                    {/* <Text numberOfLines={1} style={styles.song_artist}>{artists}</Text> */}
                 </View>
             </View>
             <Text numberOfLines={1} style={styles.album}>{album}</Text>
@@ -47,17 +57,13 @@ const styles = StyleSheet.create({
         flex: 1.5,
     },
     song_image: {
-        // height: windowHeight * 0.01,
-        // width: windowWidth * 0.05,
-        height: 10,
-        width: 10,
+        width: windowWidth * 0.05,
         aspectRatio: 1,
         flex: 3.5,
-        backgroundColor: 'blue', //testing purposes
     },
     song_title_and_artist: {
         flex: 7,
-        padding: 3,
+        padding: windowWidth * 0.02,
         justifyContent: 'center',
     },
     song_title: {
