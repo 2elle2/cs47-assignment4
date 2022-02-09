@@ -5,38 +5,53 @@ import {
     View,
     Image,
     Dimensions,
+    Pressable,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { AntDesign } from '@expo/vector-icons';
 import Colors from './Themes/colors';
 import millisToMinutesAndSeconds from './utils/millisToMinuteSeconds';
 
 const windowWidth = Dimensions.get('window').width;
 
+export default function Song({ idx, imageUrl, title, artists, album, duration, externalUrl, previewUrl }) {
+    const navigation = useNavigation();
 
-export default function Song({ idx, imageUrl, title, artists, album, duration }) {
     return (
-        <View style={styles.song}>
-            <Text style={styles.idx}>{idx}</Text>
-            <Image style={styles.song_image} source={{uri: imageUrl}}/>
-            <View style={styles.song_title_and_artist}>
-                <View style={{justifyContent: 'flex-end'}}>
-                    <Text numberOfLines={1} style={styles.song_title}>{title}</Text>
+        <Pressable 
+            onPress={() => navigation.navigate("SongScreen", {url: externalUrl}) }>
+            <View style={styles.song}>
+                <Pressable 
+                    style={styles.play_button} 
+                    onPress={(e) => {
+                        e.stopPropagation();
+                        navigation.navigate("SoundPreviewScreen", {url: previewUrl})
+                    }} 
+                >
+                    <AntDesign name="play" size={windowWidth * 0.045} color={Colors.spotify}/>
+                </Pressable>
+                <Image style={styles.song_image} source={{uri: imageUrl}}/>
+                <View style={styles.song_title_and_artist}>
+                    <View style={{justifyContent: 'flex-end'}}>
+                        <Text numberOfLines={1} style={styles.song_title}>{title}</Text>
+                    </View>
+                    <View>
+                        <Text numberOfLines={1} style={styles.song_artist}>
+                        {
+                            artists.map((obj,idx) => {
+                                return (idx !== artists.length - 1) ? 
+                                    <Text key={idx}>{obj.name}, </Text> : 
+                                    <Text key={idx}>{obj.name}</Text>
+                            })
+                        }
+                        </Text>
+                        {/* <Text numberOfLines={1} style={styles.song_artist}>{artists}</Text> */}
+                    </View>
                 </View>
-                <View>
-                    <Text numberOfLines={1} style={styles.song_artist}>
-                    {
-                        artists.map((obj,idx) => {
-                            return (idx !== artists.length - 1) ? 
-                                <Text key={idx}>{obj.name}, </Text> : 
-                                <Text key={idx}>{obj.name}</Text>
-                        })
-                    }
-                    </Text>
-                    {/* <Text numberOfLines={1} style={styles.song_artist}>{artists}</Text> */}
-                </View>
+                <Text numberOfLines={1} style={styles.album}>{album}</Text>
+                <Text style={styles.duration}>{millisToMinutesAndSeconds(duration)}</Text>
             </View>
-            <Text numberOfLines={1} style={styles.album}>{album}</Text>
-            <Text style={styles.duration}>{millisToMinutesAndSeconds(duration)}</Text>
-        </View>
+        </Pressable>
     );
 }
 
@@ -49,11 +64,9 @@ const styles = StyleSheet.create({
         padding: 2,
         alignItems: 'center',
     },
-    idx: {
-        fontSize: 16,
-        color: Colors.gray,
-        textAlign: 'center', // horizontally center text
-        flex: 1.5,
+    play_button: {
+        flex: 2,
+        alignItems: 'center',
     },
     song_image: {
         width: windowWidth * 0.05,
